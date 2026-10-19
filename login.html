@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>رقيب الاشتراكات | تسجيل الدخول</title>
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 gap-8">
+
+  <!-- صندوق تسجيل الدخول -->
+  <div class="bg-white w-full max-w-md rounded-3xl shadow-xl overflow-hidden">
+    
+    <!-- القسم العلوي (اللوجو) -->
+    <div class="bg-indigo-600 p-8 text-center">
+      <div class="w-16 h-16 rounded-2xl bg-white/10 text-white flex items-center justify-center text-3xl mx-auto mb-4 backdrop-blur-sm border border-white/20">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h1 class="text-2xl font-bold text-white mb-1">رقيب الاشتراكات</h1>
+      <p class="text-indigo-100 text-sm">مرحباً بك مجدداً! تحكم في مصروفاتك بذكاء</p>
+    </div>
+
+    <div class="p-8">
+      
+      <!-- أزرار التبديل (دخول / تسجيل جديد) -->
+      <div class="flex bg-slate-100 rounded-xl p-1 mb-8">
+        <button id="loginTab" onclick="switchTab('login')" class="flex-1 py-2 text-sm font-bold bg-white text-indigo-600 rounded-lg shadow-sm transition">تسجيل دخول</button>
+        <button id="registerTab" onclick="switchTab('register')" class="flex-1 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 transition">حساب جديد</button>
+      </div>
+
+      <!-- نموذج تسجيل الدخول -->
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">البريد الإلكتروني</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+              <i class="fa-regular fa-envelope"></i>
+            </div>
+            <input type="email" id="loginEmail" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="example@email.com">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">كلمة المرور</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <input type="password" id="loginPassword" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="••••••••">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-md transition-all active:scale-95">دخول</button>
+      </form>
+
+      <!-- نموذج إنشاء حساب جديد (مخفي افتراضياً) -->
+      <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-5 hidden">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">الاسم الكامل</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+              <i class="fa-regular fa-user"></i>
+            </div>
+            <input type="text" id="regName" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="صالح الـ...">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">البريد الإلكتروني</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+              <i class="fa-regular fa-envelope"></i>
+            </div>
+            <input type="email" id="regEmail" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="example@email.com">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">كلمة المرور</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <input type="password" id="regPassword" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="••••••••">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl shadow-md transition-all active:scale-95">إنشاء الحساب الجديد</button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- قسم التواصل أسفل الصفحة -->
+  <div class="text-center text-sm text-slate-500 w-full max-w-md">
+    <p class="mb-3 font-semibold">للتواصل والدعم الفني:</p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+      
+      <!-- رابط الواتساب -->
+      <a href="https://wa.me/966537185659" target="_blank" class="flex items-center justify-center gap-2 hover:text-green-600 transition-colors bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200/80">
+        <i class="fa-brands fa-whatsapp text-green-500 text-lg"></i>
+        <span class="font-bold tracking-wider" dir="ltr">0537 185 659</span>
+      </a>
+      
+      <!-- رابط الإيميل -->
+      <a href="mailto:saleh.a.aladdad@gmail.com" class="flex items-center justify-center gap-2 hover:text-indigo-600 transition-colors bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200/80">
+        <i class="fa-solid fa-envelope text-indigo-500 text-lg"></i>
+        <span class="font-bold">saleh.a.aladdad</span>
+      </a>
+      
+    </div>
+  </div>
+
+  <script>
+    // دالة لتبديل العرض بين "دخول" و "تسجيل جديد"
+    function switchTab(tab) {
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const loginTab = document.getElementById('loginTab');
+      const registerTab = document.getElementById('registerTab');
+
+      if (tab === 'login') {
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+        
+        loginTab.className = "flex-1 py-2 text-sm font-bold bg-white text-indigo-600 rounded-lg shadow-sm transition";
+        registerTab.className = "flex-1 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 transition";
+      } else {
+        loginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+        
+        registerTab.className = "flex-1 py-2 text-sm font-bold bg-white text-indigo-600 rounded-lg shadow-sm transition";
+        loginTab.className = "flex-1 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 transition";
+      }
+    }
+
+    // --- الاتصال بالخادم ---
+
+    // 1. تسجيل الدخول
+    async function handleLogin(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerText;
+      submitBtn.innerText = "جاري التحقق...";
+
+      try {
+        const response = await fetch('http://localhost:8000/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, password: password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // حفظ بيانات المستخدم في المتصفح
+          localStorage.setItem('currentUser', JSON.stringify({
+            id: data.user_id,
+            name: data.name
+          }));
+          // نقله للصفحة الرئيسية
+          window.location.href = 'index.html';
+        } else {
+          alert(data.detail || "خطأ في تسجيل الدخول");
+        }
+      } catch (error) {
+        alert("لا يمكن الاتصال بالخادم. تأكد من تشغيل uvicorn.");
+      } finally {
+        submitBtn.innerText = originalText;
+      }
+    }
+
+    // 2. إنشاء حساب جديد
+    async function handleRegister(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerText;
+      submitBtn.innerText = "جاري الإنشاء...";
+
+      try {
+        const response = await fetch('http://localhost:8000/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name, email: email, password: password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+           // حفظ بيانات المستخدم في المتصفح
+           localStorage.setItem('currentUser', JSON.stringify({
+            id: data.user_id,
+            name: data.name
+          }));
+          alert("تم إنشاء الحساب بنجاح! سيتم تحويلك الآن.");
+          window.location.href = 'index.html';
+        } else {
+          alert(data.detail || "حدث خطأ أثناء إنشاء الحساب");
+        }
+      } catch (error) {
+        alert("لا يمكن الاتصال بالخادم. تأكد من تشغيل uvicorn.");
+      } finally {
+        submitBtn.innerText = originalText;
+      }
+    }
+  </script>
+</body>
+</html>
