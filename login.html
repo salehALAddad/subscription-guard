@@ -15,6 +15,7 @@
   
   <script>
     tailwind.config = {
+      darkMode: 'class', // تمت إضافة دعم الوضع الليلي هنا
       theme: {
         extend: {
           fontFamily: {
@@ -26,15 +27,22 @@
   </script>
   <style>
     body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
+    /* أنماط إضافية للوضع الليلي */
+    .dark body { background-color: #0f172a; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4 gap-8">
+<body class="min-h-screen flex flex-col items-center justify-center p-4 gap-8 dark:bg-slate-900 transition-colors duration-300">
+
+  <!-- زر التبديل للوضع الليلي -->
+  <button id="theme-toggle" class="absolute top-5 left-5 p-3 bg-white dark:bg-slate-800 rounded-full text-slate-800 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shadow-md border border-slate-200 dark:border-slate-700">
+      <span id="theme-icon" class="text-xl">🌙</span> 
+  </button>
 
   <!-- صندوق تسجيل الدخول -->
-  <div class="bg-white w-full max-w-md rounded-3xl shadow-xl overflow-hidden">
+  <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-3xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-700 transition-colors duration-300">
     
     <!-- القسم العلوي (اللوجو) -->
-    <div class="bg-indigo-600 p-8 text-center">
+    <div class="bg-indigo-600 dark:bg-indigo-800 p-8 text-center transition-colors duration-300">
       <div class="w-16 h-16 rounded-2xl bg-white/10 text-white flex items-center justify-center text-3xl mx-auto mb-4 backdrop-blur-sm border border-white/20">
         <i class="fa-solid fa-shield-halved"></i>
       </div>
@@ -45,87 +53,87 @@
     <div class="p-8">
       
       <!-- أزرار التبديل (دخول / تسجيل جديد) -->
-      <div class="flex bg-slate-100 rounded-xl p-1 mb-8">
-        <button id="loginTab" onclick="switchTab('login')" class="flex-1 py-2 text-sm font-bold bg-white text-indigo-600 rounded-lg shadow-sm transition">تسجيل دخول</button>
-        <button id="registerTab" onclick="switchTab('register')" class="flex-1 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 transition">حساب جديد</button>
+      <div class="flex bg-slate-100 dark:bg-slate-700 rounded-xl p-1 mb-8 transition-colors duration-300">
+        <button id="loginTab" onclick="switchTab('login')" class="flex-1 py-2 text-sm font-bold bg-white dark:bg-slate-600 text-indigo-600 dark:text-indigo-300 rounded-lg shadow-sm transition">تسجيل دخول</button>
+        <button id="registerTab" onclick="switchTab('register')" class="flex-1 py-2 text-sm font-semibold text-slate-500 dark:text-slate-300 hover:text-slate-700 dark:hover:text-white transition">حساب جديد</button>
       </div>
 
       <!-- نموذج تسجيل الدخول -->
       <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1.5">البريد الإلكتروني</label>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">البريد الإلكتروني</label>
           <div class="relative">
             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
               <i class="fa-regular fa-envelope"></i>
             </div>
-            <input type="email" id="loginEmail" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="example@email.com">
+            <input type="email" id="loginEmail" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="example@email.com">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1.5">كلمة المرور</label>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">كلمة المرور</label>
           <div class="relative">
             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
               <i class="fa-solid fa-lock"></i>
             </div>
-            <input type="password" id="loginPassword" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="••••••••">
+            <input type="password" id="loginPassword" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="••••••••">
           </div>
         </div>
 
-        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-md transition-all active:scale-95">دخول</button>
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-bold py-3 rounded-xl shadow-md transition-all active:scale-95">دخول</button>
       </form>
 
       <!-- نموذج إنشاء حساب جديد (مخفي افتراضياً) -->
       <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-5 hidden">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1.5">الاسم الكامل</label>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">الاسم الكامل</label>
           <div class="relative">
             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
               <i class="fa-regular fa-user"></i>
             </div>
-            <input type="text" id="regName" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="صالح الـ...">
+            <input type="text" id="regName" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="صالح الـ...">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1.5">البريد الإلكتروني</label>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">البريد الإلكتروني</label>
           <div class="relative">
             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
               <i class="fa-regular fa-envelope"></i>
             </div>
-            <input type="email" id="regEmail" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="example@email.com">
+            <input type="email" id="regEmail" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="example@email.com">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1.5">كلمة المرور</label>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">كلمة المرور</label>
           <div class="relative">
             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
               <i class="fa-solid fa-lock"></i>
             </div>
-            <input type="password" id="regPassword" required class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="••••••••">
+            <input type="password" id="regPassword" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white text-sm rounded-xl pr-10 pl-3 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="••••••••">
           </div>
         </div>
 
-        <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl shadow-md transition-all active:scale-95">إنشاء الحساب الجديد</button>
+        <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-bold py-3 rounded-xl shadow-md transition-all active:scale-95">إنشاء الحساب الجديد</button>
       </form>
 
     </div>
   </div>
 
   <!-- قسم التواصل أسفل الصفحة -->
-  <div class="text-center text-sm text-slate-500 w-full max-w-md">
+  <div class="text-center text-sm text-slate-500 dark:text-slate-400 w-full max-w-md transition-colors">
     <p class="mb-3 font-semibold">للتواصل والدعم الفني:</p>
     <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
       
       <!-- رابط الواتساب -->
-      <a href="https://wa.me/966537185659" target="_blank" class="flex items-center justify-center gap-2 hover:text-green-600 transition-colors bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200/80">
+      <a href="https://wa.me/966537185659" target="_blank" class="flex items-center justify-center gap-2 hover:text-green-600 dark:hover:text-green-400 transition-colors bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl shadow-sm border border-slate-200/80 dark:border-slate-700">
         <i class="fa-brands fa-whatsapp text-green-500 text-lg"></i>
         <span class="font-bold tracking-wider" dir="ltr">0537 185 659</span>
       </a>
       
       <!-- رابط الإيميل -->
-      <a href="mailto:saleh.a.aladdad@gmail.com" class="flex items-center justify-center gap-2 hover:text-indigo-600 transition-colors bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200/80">
+      <a href="mailto:saleh.a.aladdad@gmail.com" class="flex items-center justify-center gap-2 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl shadow-sm border border-slate-200/80 dark:border-slate-700">
         <i class="fa-solid fa-envelope text-indigo-500 text-lg"></i>
         <span class="font-bold">saleh.a.aladdad</span>
       </a>
@@ -134,6 +142,33 @@
   </div>
 
   <script>
+    // --- كود تشغيل وتفعيل الوضع الليلي ---
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+
+    // التحقق من حالة الوضع الليلي المحفوظة في localStorage عند تحميل الصفحة
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        if (themeIcon) themeIcon.textContent = '☀️';
+    } else {
+        document.documentElement.classList.remove('dark');
+        if (themeIcon) themeIcon.textContent = '🌙';
+    }
+
+    // وظيفة زر التبديل
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.textContent = '☀️';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.textContent = '🌙';
+            }
+        });
+    }
+
     // دالة لتبديل العرض بين "دخول" و "تسجيل جديد"
     function switchTab(tab) {
       const loginForm = document.getElementById('loginForm');
@@ -141,18 +176,21 @@
       const loginTab = document.getElementById('loginTab');
       const registerTab = document.getElementById('registerTab');
 
+      const activeClass = "flex-1 py-2 text-sm font-bold bg-white dark:bg-slate-600 text-indigo-600 dark:text-indigo-300 rounded-lg shadow-sm transition";
+      const inactiveClass = "flex-1 py-2 text-sm font-semibold text-slate-500 dark:text-slate-300 hover:text-slate-700 dark:hover:text-white transition";
+
       if (tab === 'login') {
         loginForm.classList.remove('hidden');
         registerForm.classList.add('hidden');
         
-        loginTab.className = "flex-1 py-2 text-sm font-bold bg-white text-indigo-600 rounded-lg shadow-sm transition";
-        registerTab.className = "flex-1 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 transition";
+        loginTab.className = activeClass;
+        registerTab.className = inactiveClass;
       } else {
         loginForm.classList.add('hidden');
         registerForm.classList.remove('hidden');
         
-        registerTab.className = "flex-1 py-2 text-sm font-bold bg-white text-indigo-600 rounded-lg shadow-sm transition";
-        loginTab.className = "flex-1 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 transition";
+        registerTab.className = activeClass;
+        loginTab.className = inactiveClass;
       }
     }
 

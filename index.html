@@ -17,6 +17,7 @@
   
   <script>
     tailwind.config = {
+      darkMode: 'class', // تمت إضافة دعم الوضع الليلي
       theme: {
         extend: {
           fontFamily: {
@@ -35,30 +36,35 @@
     }
   </script>
 </head>
-<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900 antialiased min-h-screen flex flex-col transition-colors duration-300">
 
   <!-- Header -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+  <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30 shadow-sm transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xl shadow-md shadow-indigo-200">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center text-xl shadow-md shadow-indigo-200 dark:shadow-none">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
         <div>
-          <h1 class="text-lg font-bold text-slate-900 leading-tight">رقيب الاشتراكات</h1>
-          <p class="text-xs text-slate-500">Subscription Guard</p>
+          <h1 class="text-lg font-bold text-slate-900 dark:text-white leading-tight">رقيب الاشتراكات</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Subscription Guard</p>
         </div>
       </div>
       
       <div class="flex items-center gap-3">
+        <!-- زر التبديل للوضع الليلي -->
+        <button id="theme-toggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+            <span id="theme-icon">🌙</span> 
+        </button>
+
         <!-- زر تسجيل الخروج الجديد -->
-        <button onclick="logout()" class="inline-flex items-center gap-2 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 px-4 py-2 rounded-xl text-sm font-semibold transition-all active:scale-95">
+        <button onclick="logout()" class="inline-flex items-center gap-2 bg-rose-50 dark:bg-rose-900/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/50 px-4 py-2 rounded-xl text-sm font-semibold transition-all active:scale-95">
           <i class="fa-solid fa-arrow-right-from-bracket"></i>
           <span class="hidden sm:inline">خروج</span>
         </button>
 
         <!-- زر إضافة اشتراك -->
-        <button onclick="openModal()" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm shadow-indigo-200 active:scale-95">
+        <button onclick="openModal()" class="inline-flex items-center gap-2 bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm shadow-indigo-200 dark:shadow-none active:scale-95">
           <i class="fa-solid fa-plus"></i>
           <span>إضافة اشتراك</span>
         </button>
@@ -72,64 +78,64 @@
     <!-- KPI / Summary Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
       <!-- Monthly Cost -->
-      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm relative overflow-hidden">
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm relative overflow-hidden transition-colors duration-300">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-semibold text-slate-500">المصروف الشهري التقديري</span>
-          <span class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">المصروف الشهري التقديري</span>
+          <span class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm">
             <i class="fa-solid fa-money-bill-wave"></i>
           </span>
         </div>
         <div class="flex items-baseline gap-2">
-          <span id="monthlyTotal" class="text-2xl font-bold text-slate-900">0.00</span>
-          <span class="text-xs font-medium text-slate-500">ريال / شهرياً</span>
+          <span id="monthlyTotal" class="text-2xl font-bold text-slate-900 dark:text-white">0.00</span>
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">ريال / شهرياً</span>
         </div>
       </div>
 
       <!-- Annual Cost -->
-      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm relative overflow-hidden">
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm relative overflow-hidden transition-colors duration-300">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-semibold text-slate-500">المصروف السنوي التراكمي</span>
-          <span class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm">
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">المصروف السنوي التراكمي</span>
+          <span class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-sm">
             <i class="fa-solid fa-calendar-check"></i>
           </span>
         </div>
         <div class="flex items-baseline gap-2">
-          <span id="annualTotal" class="text-2xl font-bold text-slate-900">0.00</span>
-          <span class="text-xs font-medium text-slate-500">ريال / سنوياً</span>
+          <span id="annualTotal" class="text-2xl font-bold text-slate-900 dark:text-white">0.00</span>
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">ريال / سنوياً</span>
         </div>
       </div>
 
       <!-- Free Trials Count -->
-      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm relative overflow-hidden">
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm relative overflow-hidden transition-colors duration-300">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-semibold text-slate-500">فترات تجريبية نشطة</span>
-          <span class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-sm">
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">فترات تجريبية نشطة</span>
+          <span class="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center text-sm">
             <i class="fa-solid fa-clock"></i>
           </span>
         </div>
         <div class="flex items-baseline gap-2">
-          <span id="trialCount" class="text-2xl font-bold text-amber-600">0</span>
-          <span class="text-xs font-medium text-slate-500">تحتاج انتباهك</span>
+          <span id="trialCount" class="text-2xl font-bold text-amber-600 dark:text-amber-500">0</span>
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">تحتاج انتباهك</span>
         </div>
       </div>
 
       <!-- Urgent Renewals (Next 3 Days) -->
-      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm relative overflow-hidden">
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm relative overflow-hidden transition-colors duration-300">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-semibold text-slate-500">خصم وشيك (خلال 3 أيام)</span>
-          <span class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-sm">
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">خصم وشيك (خلال 3 أيام)</span>
+          <span class="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center text-sm">
             <i class="fa-solid fa-triangle-exclamation"></i>
           </span>
         </div>
         <div class="flex items-baseline gap-2">
-          <span id="urgentCount" class="text-2xl font-bold text-rose-600">0</span>
-          <span class="text-xs font-medium text-slate-500">اشتراكات</span>
+          <span id="urgentCount" class="text-2xl font-bold text-rose-600 dark:text-rose-500">0</span>
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">اشتراكات</span>
         </div>
       </div>
     </div>
 
     <!-- Quick Shortcuts: Fast Unsubscribe -->
-    <section class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-2xl p-6 shadow-md">
+    <section class="bg-gradient-to-r from-slate-900 to-indigo-950 dark:from-slate-800 dark:to-indigo-900 text-white rounded-2xl p-6 shadow-md">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 class="text-base font-bold flex items-center gap-2">
@@ -156,15 +162,15 @@
     </section>
 
     <!-- Subscriptions List Section -->
-    <section class="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
+    <section class="bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden transition-colors duration-300">
       <!-- Section Header & Filter -->
-      <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-colors duration-300">
         <div>
-          <h2 class="text-base font-bold text-slate-900">قائمة اشتراكاتك</h2>
-          <p class="text-xs text-slate-500">تتبع مواعيد التجديد وتفاصيل الرسوم</p>
+          <h2 class="text-base font-bold text-slate-900 dark:text-white">قائمة اشتراكاتك</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">تتبع مواعيد التجديد وتفاصيل الرسوم</p>
         </div>
         <div class="flex items-center gap-2 w-full sm:w-auto">
-          <select id="filterCategory" onchange="renderSubscriptions()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500">
+          <select id="filterCategory" onchange="renderSubscriptions()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-xs rounded-xl px-3 py-2 text-slate-700 dark:text-slate-300 outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-300">
             <option value="all">كل الفئات</option>
             <option value="ترفيه">ترفيه</option>
             <option value="عمل وإنتاجية">عمل وإنتاجية</option>
@@ -177,18 +183,18 @@
       </div>
 
       <!-- Subscriptions Grid / Table -->
-      <div id="subscriptionsContainer" class="divide-y divide-slate-100">
+      <div id="subscriptionsContainer" class="divide-y divide-slate-100 dark:divide-slate-700">
         <!-- Rendered Dynamically via JS -->
       </div>
 
       <!-- Empty State -->
       <div id="emptyState" class="hidden py-16 text-center">
-        <div class="w-16 h-16 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center mx-auto text-2xl mb-3">
+        <div class="w-16 h-16 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 dark:text-indigo-400 flex items-center justify-center mx-auto text-2xl mb-3 transition-colors duration-300">
           <i class="fa-solid fa-receipt"></i>
         </div>
-        <h3 class="text-sm font-bold text-slate-800">لا توجد اشتراكات مسجلة حالياً</h3>
-        <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">ابدأ بإضافة أول اشتراك لمراقبة مدفوعاتك وتجنب التجديد التلقائي غير المرغوب فيه.</p>
-        <button onclick="openModal()" class="mt-4 inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition">
+        <h3 class="text-sm font-bold text-slate-800 dark:text-white">لا توجد اشتراكات مسجلة حالياً</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">ابدأ بإضافة أول اشتراك لمراقبة مدفوعاتك وتجنب التجديد التلقائي غير المرغوب فيه.</p>
+        <button onclick="openModal()" class="mt-4 inline-flex items-center gap-2 bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition">
           <i class="fa-solid fa-plus"></i>
           <span>أضف اشتراكك الأول</span>
         </button>
@@ -198,32 +204,32 @@
   </main>
 
   <!-- Add/Edit Subscription Modal -->
-  <div id="subscriptionModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm hidden">
-    <div class="bg-white rounded-2xl w-full max-w-md mx-4 p-6 shadow-2xl relative">
-      <button onclick="closeModal()" class="absolute left-4 top-4 text-slate-400 hover:text-slate-600 text-sm">
+  <div id="subscriptionModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 dark:bg-slate-900/80 backdrop-blur-sm hidden">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md mx-4 p-6 shadow-2xl relative border border-slate-100 dark:border-slate-700 transition-colors duration-300">
+      <button onclick="closeModal()" class="absolute left-4 top-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-sm">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
-      <h3 id="modalTitle" class="text-base font-bold text-slate-900 mb-4">إضافة اشتراك جديد</h3>
+      <h3 id="modalTitle" class="text-base font-bold text-slate-900 dark:text-white mb-4">إضافة اشتراك جديد</h3>
 
       <form id="subForm" onsubmit="saveSubscription(event)" class="space-y-4">
         <input type="hidden" id="subId">
 
         <!-- Name -->
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">اسم الخدمة أو التطبيق *</label>
-          <input type="text" id="subName" required placeholder="مثال: Netflix, ChatGPT, Figma" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500">
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">اسم الخدمة أو التطبيق *</label>
+          <input type="text" id="subName" required placeholder="مثال: Netflix, ChatGPT, Figma" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white text-xs rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-300">
         </div>
 
         <!-- Price & Currency & Cycle -->
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1">المبلغ *</label>
-            <input type="number" step="0.01" id="subPrice" required placeholder="45.00" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">المبلغ *</label>
+            <input type="number" step="0.01" id="subPrice" required placeholder="45.00" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white text-xs rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-300">
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1">دورة الدفع</label>
-            <select id="subCycle" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">دورة الدفع</label>
+            <select id="subCycle" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white text-xs rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-300">
               <option value="monthly">شهرياً</option>
               <option value="yearly">سنوياً</option>
             </select>
@@ -232,14 +238,14 @@
 
         <!-- Next Renewal Date -->
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">تاريخ الخصم القادم أو نهاية التجربة *</label>
-          <input type="date" id="subNextDate" required class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500">
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">تاريخ الخصم القادم أو نهاية التجربة *</label>
+          <input type="date" id="subNextDate" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white text-xs rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-300">
         </div>
 
         <!-- Category -->
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">الفئة</label>
-          <select id="subCategory" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500">
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">الفئة</label>
+          <select id="subCategory" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white text-xs rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-300">
             <option value="ترفيه">ترفيه</option>
             <option value="عمل وإنتاجية">عمل وإنتاجية</option>
             <option value="ذكاء اصطناعي">ذكاء اصطناعي</option>
@@ -251,14 +257,14 @@
 
         <!-- Free Trial Toggle -->
         <div class="flex items-center gap-2 pt-1">
-          <input type="checkbox" id="subIsTrial" class="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500">
-          <label for="subIsTrial" class="text-xs text-slate-700 font-medium select-none cursor-pointer">هذا الاشتراك عبارة عن فترة تجريبية مجانية (Free Trial)</label>
+          <input type="checkbox" id="subIsTrial" class="w-4 h-4 text-indigo-600 rounded border-slate-300 dark:border-slate-600 dark:bg-slate-900 focus:ring-indigo-500">
+          <label for="subIsTrial" class="text-xs text-slate-700 dark:text-slate-300 font-medium select-none cursor-pointer">هذا الاشتراك عبارة عن فترة تجريبية مجانية (Free Trial)</label>
         </div>
 
         <!-- Submit Button -->
         <div class="flex items-center justify-end gap-2 pt-4">
-          <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition">إلغاء</button>
-          <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-xl text-xs font-semibold shadow-sm transition">حفظ الاشتراك</button>
+          <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition">إلغاء</button>
+          <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white px-5 py-2 rounded-xl text-xs font-semibold shadow-sm transition">حفظ الاشتراك</button>
         </div>
       </form>
     </div>
