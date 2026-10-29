@@ -1,3 +1,32 @@
+// --- إعدادات الوضع الليلي ---
+function initializeTheme() {
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  const themeIcon = document.getElementById('theme-icon');
+
+  // التحقق من حالة الوضع الليلي المحفوظة
+  if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+      if (themeIcon) themeIcon.textContent = '☀️';
+  } else {
+      document.documentElement.classList.remove('dark');
+      if (themeIcon) themeIcon.textContent = '🌙';
+  }
+
+  // وظيفة زر التبديل (إذا كان الزر موجوداً في الصفحة)
+  if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', function() {
+          document.documentElement.classList.toggle('dark');
+          if (document.documentElement.classList.contains('dark')) {
+              localStorage.setItem('theme', 'dark');
+              themeIcon.textContent = '☀️';
+          } else {
+              localStorage.setItem('theme', 'light');
+              themeIcon.textContent = '🌙';
+          }
+      });
+  }
+}
+
 // --- 1. حارس البوابة (التحقق من تسجيل الدخول) ---
 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
@@ -95,7 +124,6 @@ function renderSubscriptions() {
   }
 
   emptyState.classList.add('hidden');
-
   filtered.sort((a, b) => new Date(a.nextDate) - new Date(b.nextDate));
 
   container.innerHTML = filtered.map(sub => {
@@ -104,16 +132,16 @@ function renderSubscriptions() {
     let cardBg = '';
 
     if (daysLeft < 0) {
-      badgeHtml = `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-500">انتهى / تجدد مؤخراً</span>`;
+      badgeHtml = `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300">انتهى / تجدد مؤخراً</span>`;
     } else if (daysLeft <= 3) {
-      badgeHtml = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700 animate-pulse flex items-center gap-1">
+      badgeHtml = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-400 animate-pulse flex items-center gap-1">
                     <i class="fa-solid fa-triangle-exclamation"></i> باقي ${daysLeft === 0 ? 'اليوم!' : daysLeft + ' أيام'}
                    </span>`;
-      cardBg = 'bg-rose-50/30';
+      cardBg = 'bg-rose-50/30 dark:bg-rose-900/20 border-rose-100 dark:border-rose-800';
     } else if (daysLeft <= 7) {
-      badgeHtml = `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">باقي ${daysLeft} أيام</span>`;
+      badgeHtml = `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400">باقي ${daysLeft} أيام</span>`;
     } else {
-      badgeHtml = `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">باقي ${daysLeft} يوم</span>`;
+      badgeHtml = `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300">باقي ${daysLeft} يوم</span>`;
     }
 
     const trialBadge = sub.isTrial 
@@ -122,40 +150,41 @@ function renderSubscriptions() {
 
     const calUrl = createGoogleCalendarUrl(sub);
 
+    // تم إضافة transition-colors لضمان ثبات ألوان النصوص وعدم اختفائها عند التمرير
     return `
-      <div class="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition hover:bg-slate-50 ${cardBg}">
+      <div class="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-colors duration-300 hover:bg-slate-50 dark:hover:bg-slate-700 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 ${cardBg}">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 flex items-center justify-center text-lg font-bold">
+          <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 flex items-center justify-center text-lg font-bold transition-colors">
             ${sub.name.charAt(0).toUpperCase()}
           </div>
           <div>
             <div class="flex items-center gap-1">
-              <h4 class="text-sm font-bold text-slate-900">${sub.name}</h4>
+              <h4 class="text-sm font-bold text-slate-900 dark:text-white transition-colors">${sub.name}</h4>
               ${trialBadge}
             </div>
-            <div class="flex items-center gap-2 mt-1 text-xs text-slate-500">
-              <span class="bg-slate-100 px-2 py-0.5 rounded">${sub.category}</span>
+            <div class="flex items-center gap-2 mt-1 text-xs text-slate-500 dark:text-slate-400 transition-colors">
+              <span class="bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded transition-colors">${sub.category}</span>
               <span>•</span>
-              <span>الخصم القادم: <strong class="text-slate-700">${sub.nextDate}</strong></span>
+              <span>الخصم القادم: <strong class="text-slate-700 dark:text-slate-300 transition-colors">${sub.nextDate}</strong></span>
             </div>
           </div>
         </div>
 
         <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4">
           <div class="text-right">
-            <div class="text-base font-bold text-slate-900">${parseFloat(sub.price).toFixed(2)} <span class="text-xs font-normal text-slate-500">ريال</span></div>
-            <div class="text-[11px] text-slate-400">${sub.cycle === 'monthly' ? 'شهرياً' : 'سنوياً'}</div>
+            <div class="text-base font-bold text-slate-900 dark:text-white transition-colors">${parseFloat(sub.price).toFixed(2)} <span class="text-xs font-normal text-slate-500 dark:text-slate-400 transition-colors">ريال</span></div>
+            <div class="text-[11px] text-slate-400 dark:text-slate-500 transition-colors">${sub.cycle === 'monthly' ? 'شهرياً' : 'سنوياً'}</div>
           </div>
 
           <div>
             ${badgeHtml}
           </div>
 
-          <a href="${calUrl}" target="_blank" title="أضف تذكير لتقويم Google" class="w-9 h-9 rounded-xl border border-slate-200 text-slate-600 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50/50 flex items-center justify-center transition">
+          <a href="${calUrl}" target="_blank" title="أضف تذكير لتقويم Google" class="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-200 dark:hover:border-indigo-800 hover:bg-indigo-50/50 dark:hover:bg-slate-600 flex items-center justify-center transition-all">
             <i class="fa-regular fa-calendar-plus text-sm"></i>
           </a>
 
-          <button onclick="deleteSubscription('${sub.id}')" title="حذف الاشتراك" class="w-9 h-9 rounded-xl border border-slate-200 text-slate-400 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50 flex items-center justify-center transition">
+          <button onclick="deleteSubscription('${sub.id}')" title="حذف الاشتراك" class="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-200 dark:hover:border-rose-800 hover:bg-rose-50 dark:hover:bg-slate-600 flex items-center justify-center transition-all">
             <i class="fa-solid fa-trash-can text-sm"></i>
           </button>
         </div>
@@ -238,7 +267,8 @@ async function deleteSubscription(id) {
   }
 }
 
-// عند تحميل الصفحة، اجلب البيانات الخاصة بالمستخدم
+// عند تحميل الصفحة، اجلب البيانات الخاصة بالمستخدم وشغل إعدادات الوضع الليلي
 document.addEventListener('DOMContentLoaded', () => {
+  initializeTheme();
   fetchMySubscriptions();
 });
